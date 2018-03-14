@@ -38,8 +38,8 @@ def download_subreddit(sub_name):
 	response = opener.open(endpoint)
 	data = json.load(response)
 
-	images = [x["data"]["url"] for x in data["data"]["children"] if x["data"]["preview"]["images"][0]["source"]["width"] >= x["data"]["preview"]["images"][0]["source"]["height"]]
-	
+	images = [x["data"]["url"] for x in data["data"]["children"] if "preview" in x["data"] and "images" in x["data"]["preview"] and x["data"]["preview"]["images"][0]["source"]["width"] >= x["data"]["preview"]["images"][0]["source"]["height"]]
+
 	with open("{}/images.txt".format(TMP_FILE_LOCATION), 'w') as file:
 		for image in images:
 			file.write("{}\n".format(image))
@@ -52,7 +52,7 @@ def download_subreddit(sub_name):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Get wallpapers from the web')
-	parser.add_argument('--subreddit', type=str, help="Enter a subreddit to parse")
+	parser.add_argument('--subreddit', type=str, help="Enter a subreddit to parse", required=True)
 	args = parser.parse_args()
 	clear_tmp_dir()
 	download_subreddit(args.subreddit)
