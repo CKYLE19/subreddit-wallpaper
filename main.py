@@ -18,11 +18,11 @@ elif platform == "win32":
 else:
 	raise Exception("Unsupported OS.")
 
-def create_cron_job():
+def create_cron_job(subreddit):
 	cron_file = "{}/cronjob.txt".format(CURRENT_DIR)
 	with open(cron_file, "w") as file:
 		file.write("{}\n".format("*/1 * * * * python {}/set_wallpaper.py".format(CURRENT_DIR)))
-		file.write("{}\n".format("0 1 * * * python {}/main.py".format(CURRENT_DIR)))
+		file.write("{}\n".format("0 1 * * * python {}/main.py --subreddit={}".format(CURRENT_DIR, subreddit)))
 	file.close()
 	subprocess.Popen("crontab {}".format(cron_file), shell=True)
 
@@ -57,4 +57,4 @@ if __name__ == "__main__":
 	clear_tmp_dir()
 	download_subreddit(args.subreddit)
 	subprocess.Popen(SET_WALLPAPER_CMD, shell=True)
-	create_cron_job()
+	create_cron_job(args.subreddit)
